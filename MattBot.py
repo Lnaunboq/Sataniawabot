@@ -5,6 +5,7 @@ import discord
 from discord.ext import commands
 import spotipy  # type: ignore
 from spotipy.oauth2 import SpotifyClientCredentials  # type: ignore
+from setproctitle import setproctitle # type: ignore
 
 TOKEN = ""
 DEEPL_API_KEY = ""
@@ -35,6 +36,7 @@ intents.message_content = True
 bot = commands.Bot(command_prefix=">", intents=intents, help_command=None)
 bot.remove_command("help")
 
+setproctitle("SataniawaBot")
 
 @bot.event
 async def on_ready():
