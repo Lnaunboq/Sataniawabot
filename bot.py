@@ -49,7 +49,9 @@ class SataniawaBot(commands.Bot):
             SpotifyService.from_config(self.config), self.config.playlists,
         ))
         await self.add_cog(FunCog(self.config.sushi_dir))
-        await self.add_cog(ValheimCog(ValheimService(self.config.valheim_server_name)))
+        await self.add_cog(ValheimCog(ValheimService(
+            self.config.valheim_server_name, screen_name=self.config.valheim_screen_name,
+        )))
 
     async def close(self):
         try:

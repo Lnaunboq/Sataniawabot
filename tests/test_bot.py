@@ -179,6 +179,27 @@ class CommandTests(unittest.IsolatedAsyncioTestCase):
         cog.service.is_running.assert_not_awaited()
         self.assertIn("Sous-commande inconnue", self.ctx.send.call_args.args[0])
 
+    async def test_valheim_player(self):
+        from sataniawabot.services.valheim import PlayerSnapshot
+        cog = self.bot.get_cog("ValheimCog")
+        cog.service = SimpleNamespace(
+            server_name="Serveur Gangserv3",
+            players=AsyncMock(return_value=PlayerSnapshot(1, ("Viking",), "10/12/2026 21:35:50")),
+        )
+        await self.invoke("valheim player")
+        self.assertIn("1 joueur(s)", self.ctx.send.call_args.args[0])
+        self.assertIn("Viking", self.ctx.send.call_args.args[0])
+        self.assertIn("10/12/2026 21:35:50", self.ctx.send.call_args.args[0])
+        self.assertIs(self.bot.get_command("valheim players"), self.bot.get_command("valheim player"))
+        cog.service.players.return_value = PlayerSnapshot(0, (), "10/12/2026 21:45:50")
+        await self.invoke("valheim players")
+        self.assertIn("0 joueur(s)", self.ctx.send.call_args.args[0])
+        cog.service.players.side_effect = ServiceError("Console indisponible")
+        with self.assertRaises(ServiceError) as error:
+            await self.invoke("valheim player")
+        await self.bot.on_command_error(self.ctx, commands.CommandInvokeError(error.exception))
+        self.assertIn("Console indisponible", self.ctx.send.call_args.args[0])
+
     async def test_translation_and_long_result(self):
         cog = self.bot.get_cog("TranslationCog")
         cog.service = SimpleNamespace(translate=AsyncMock(return_value="あ" * 2100))

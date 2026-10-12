@@ -26,6 +26,7 @@ Les variables sont lues au lancement ; aucun fichier `.env` n’est chargé auto
 | `SPOTIFY_CLIENT_ID` | Facultative : à fournir avec le secret Spotify |
 | `SPOTIFY_CLIENT_SECRET` | Facultative : à fournir avec l’identifiant Spotify |
 | `VALHEIM_SERVER_NAME` | Nom exact passé à `-name` dans le lancement SteamCMD ; `Serveur Gangserv3` par défaut |
+| `VALHEIM_SCREEN_NAME` | Session screen contenant la console du serveur en fenêtre 0 ; `Gangserv3` par défaut |
 
 Une paire Spotify incomplète produit une erreur de configuration au démarrage.
 Sans clés API, le bot fonctionne et explique que le service demandé n’est pas
@@ -63,6 +64,7 @@ les réponses HTTP complètes ou les identifiants API.
 | `>music list` | Liste des playlists : default, weeb, sussy, rock |
 | `>anime` | Répond actuellement « anime » ; fonctionnalité à développer |
 | `>valheim` ou `>valheim status` | Indique si le processus du serveur Gangserv3 est lancé |
+| `>valheim player` ou `>valheim players` | Dernier compteur de joueurs, heure de mesure et noms lorsqu’ils sont disponibles |
 
 La vérification Valheim lit les processus locaux dans `/proc` sous Linux et fonctionne
 avec un lancement dans `screen`. Le bot doit tourner sur la même machine et pouvoir
@@ -70,6 +72,15 @@ lire les processus Valheim. Le nom doit correspondre à l’argument `-name` du 
 pas au nom de la session screen ni au nom du monde. Un processus lancé est affiché
 « allumé », même pendant le chargement du monde. Une erreur de lecture donne un
 état indéterminé plutôt qu’un faux « éteint ».
+
+La commande `player` copie temporairement le scrollback de la fenêtre 0 de screen,
+puis lit la dernière ligne `Connections`. Le compteur est publié par Valheim environ
+toutes les dix minutes : ce n’est pas une mesure instantanée. L’heure affichée est
+celle du serveur. Les noms sont affichés seulement lorsque les événements du journal
+permettent de reconstituer une liste correspondant au compteur. Le bot doit être lancé
+avec le même utilisateur que la session screen et avoir accès à la commande `screen`.
+La copie temporaire est supprimée après lecture ; aucun fichier de logs permanent
+n’est activé. Une console inaccessible ou sans mesure produit une erreur explicite.
 
 L’aide utilise les docstrings des commandes. Les erreurs d’arguments et de
 services sont transformées en messages Discord par `bot.py`. Les mentions sont

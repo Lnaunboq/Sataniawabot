@@ -22,6 +22,7 @@ class Config:
     base_dir: Path = BASE_DIR
     playlists: Mapping[str, str] = field(default_factory=lambda: dict(PLAYLISTS))
     valheim_server_name: str = "Serveur Gangserv3"
+    valheim_screen_name: str = "Gangserv3"
 
     @property
     def sushi_dir(self):
@@ -50,4 +51,5 @@ def load_config(environ=None, base_dir=BASE_DIR):
     return Config(
         token, env.get("DEEPL_API_KEY", "").strip(), client_id, client_secret, base_dir,
         valheim_server_name=env.get("VALHEIM_SERVER_NAME", "Serveur Gangserv3").strip() or "Serveur Gangserv3",
+        valheim_screen_name=env.get("VALHEIM_SCREEN_NAME", "Gangserv3").strip() or "Gangserv3",
     )

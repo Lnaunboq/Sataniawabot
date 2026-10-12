@@ -17,7 +17,7 @@ sataniawabot/
 │   └── fun.py             # Commandes sushi et anime ; avis lorsqu’elle sera activée
 ├── services/
 │   ├── deepl.py           # Traduction et gestion des erreurs DeepL
-│   ├── valheim.py         # Lecture des processus SteamCMD locaux hors de la boucle Discord
+│   ├── valheim.py         # Processus SteamCMD et compteur de joueurs via la console screen
 │   └── spotify.py         # Récupération des titres et choix aléatoire
 ├── data/
 │   ├── animes.json
