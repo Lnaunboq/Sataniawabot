@@ -25,7 +25,7 @@ Les variables sont lues au lancement ; aucun fichier `.env` n’est chargé auto
 | `DEEPL_API_KEY` | Facultative : traduction japonais/coréen ; endpoint Free pour les clés finissant par `:fx`, Pro sinon |
 | `SPOTIFY_CLIENT_ID` | Facultative : à fournir avec le secret Spotify |
 | `SPOTIFY_CLIENT_SECRET` | Facultative : à fournir avec l’identifiant Spotify |
-| `VALHEIM_SERVER_NAME` | Nom exact passé à `-name` dans le lancement SteamCMD ; `Gangserv3` par défaut |
+| `VALHEIM_SERVER_NAME` | Nom exact passé à `-name` dans le lancement SteamCMD ; `Serveur Gangserv3` par défaut |
 
 Une paire Spotify incomplète produit une erreur de configuration au démarrage.
 Sans clés API, le bot fonctionne et explique que le service demandé n’est pas

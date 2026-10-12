@@ -10,8 +10,23 @@ from sataniawabot.services.valheim import ValheimService
 
 class ValheimTests(unittest.TestCase):
     def test_configuration(self):
-        self.assertEqual(load_config({"DISCORD_TOKEN": "test"}).valheim_server_name, "Gangserv3")
+        self.assertEqual(load_config({"DISCORD_TOKEN": "test"}).valheim_server_name, "Serveur Gangserv3")
         self.assertEqual(load_config({"DISCORD_TOKEN": "test", "VALHEIM_SERVER_NAME": "Autre"}).valheim_server_name, "Autre")
+
+    def test_actual_server_name_and_other_running_server(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            service = ValheimService(load_config({"DISCORD_TOKEN": "test"}).valheim_server_name, root)
+            other = root / "229394"
+            other.mkdir()
+            (other / "cmdline").write_bytes(b"./valheim_server.x86_64\0-name\0Serveur Gangserv2\0")
+            self.assertFalse(service._is_running())
+            target = root / "229926"
+            target.mkdir()
+            (target / "cmdline").write_bytes(b"./valheim_server.x86_64\0-name\0Serveur Gangserv3\0")
+            self.assertTrue(service._is_running())
+            (target / "cmdline").unlink()
+            self.assertFalse(service._is_running())
 
     def test_process_matching(self):
         with tempfile.TemporaryDirectory() as folder:
