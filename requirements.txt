@@ -1,0 +1,5 @@
+discord.py>=2.3,<3
+aiohttp>=3.9,<4
+requests>=2.31,<3
+spotipy>=2.23,<3
+setproctitle>=1.3,<2

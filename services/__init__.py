@@ -1,0 +1,1 @@
+"""Services indépendants de Discord."""
