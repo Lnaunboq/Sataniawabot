@@ -142,9 +142,9 @@ class CommandTests(unittest.IsolatedAsyncioTestCase):
         return await command.callback(command.cog, self.ctx, *args, **kwargs)
 
     async def test_commands_and_help(self):
-        self.assertEqual({c.name for c in self.bot.commands}, {"help", "jp", "ko", "sushi", "music", "anime"})
+        self.assertEqual({c.name for c in self.bot.commands}, {"help", "jp", "ko", "sushi", "music", "anime", "valheim"})
         await self.invoke("help")
-        self.assertEqual(len(self.ctx.send.call_args.kwargs["embed"].fields), 6)
+        self.assertEqual(len(self.ctx.send.call_args.kwargs["embed"].fields), 7)
         for command in self.bot.commands:
             self.assertTrue(command.help)
             await self.invoke("help", command.name)
@@ -163,6 +163,21 @@ class CommandTests(unittest.IsolatedAsyncioTestCase):
             await self.invoke("music")
         await self.bot.on_command_error(self.ctx, commands.CommandInvokeError(error.exception))
         self.assertIn("Spotify n’est pas configuré", self.ctx.send.call_args.args[0])
+
+    async def test_valheim_status_and_unknown_subcommand(self):
+        cog = self.bot.get_cog("ValheimCog")
+        cog.service = SimpleNamespace(server_name="Gangserv3", is_running=AsyncMock(return_value=True))
+        self.ctx.subcommand_passed = None
+        await self.invoke("valheim")
+        self.assertIn("Gangserv3** est 🟢 allumé", self.ctx.send.call_args.args[0])
+        cog.service.is_running.return_value = False
+        await self.invoke("valheim status")
+        self.assertIn("🔴 éteint", self.ctx.send.call_args.args[0])
+        cog.service.is_running.reset_mock()
+        self.ctx.subcommand_passed = "inconnue"
+        await self.invoke("valheim")
+        cog.service.is_running.assert_not_awaited()
+        self.assertIn("Sous-commande inconnue", self.ctx.send.call_args.args[0])
 
     async def test_translation_and_long_result(self):
         cog = self.bot.get_cog("TranslationCog")

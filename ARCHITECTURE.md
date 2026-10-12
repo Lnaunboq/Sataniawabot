@@ -1,6 +1,6 @@
 # Architecture de SataniawaBot
 
-Le bot compte six commandes actives. Les Cogs
+Le bot compte sept commandes principales actives. Les Cogs
 regroupent les commandes Discord par fonctionnalité, les services gèrent les API,
 et la configuration est chargée explicitement au démarrage.
 
@@ -13,9 +13,11 @@ sataniawabot/
 │   ├── help.py            # Aide construite à partir des docstrings des commandes
 │   ├── translation.py     # Commandes jp et ko
 │   ├── music.py           # Commande music et liste des playlists
+│   ├── valheim.py         # Groupe valheim et état du serveur local
 │   └── fun.py             # Commandes sushi et anime ; avis lorsqu’elle sera activée
 ├── services/
 │   ├── deepl.py           # Traduction et gestion des erreurs DeepL
+│   ├── valheim.py         # Lecture des processus SteamCMD locaux hors de la boucle Discord
 │   └── spotify.py         # Récupération des titres et choix aléatoire
 ├── data/
 │   ├── animes.json

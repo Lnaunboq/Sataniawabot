@@ -9,17 +9,21 @@ if __package__:
     from .cogs.help import HelpCog
     from .cogs.music import MusicCog
     from .cogs.translation import TranslationCog
+    from .cogs.valheim import ValheimCog
     from .services.deepl import DeepLService
     from .services.errors import ServiceError
     from .services.spotify import SpotifyService
+    from .services.valheim import ValheimService
 else:
     from cogs.fun import FunCog
     from cogs.help import HelpCog
     from cogs.music import MusicCog
     from cogs.translation import TranslationCog
+    from cogs.valheim import ValheimCog
     from services.deepl import DeepLService
     from services.errors import ServiceError
     from services.spotify import SpotifyService
+    from services.valheim import ValheimService
 
 logger = logging.getLogger(__name__)
 
@@ -45,6 +49,7 @@ class SataniawaBot(commands.Bot):
             SpotifyService.from_config(self.config), self.config.playlists,
         ))
         await self.add_cog(FunCog(self.config.sushi_dir))
+        await self.add_cog(ValheimCog(ValheimService(self.config.valheim_server_name)))
 
     async def close(self):
         try:

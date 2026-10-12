@@ -21,6 +21,7 @@ class Config:
     spotify_client_secret: str = field(default="", repr=False)
     base_dir: Path = BASE_DIR
     playlists: Mapping[str, str] = field(default_factory=lambda: dict(PLAYLISTS))
+    valheim_server_name: str = "Gangserv3"
 
     @property
     def sushi_dir(self):
@@ -46,4 +47,7 @@ def load_config(environ=None, base_dir=BASE_DIR):
     client_secret = env.get("SPOTIFY_CLIENT_SECRET", "").strip()
     if bool(client_id) != bool(client_secret):
         raise RuntimeError("SPOTIFY_CLIENT_ID et SPOTIFY_CLIENT_SECRET doivent être configurés ensemble.")
-    return Config(token, env.get("DEEPL_API_KEY", "").strip(), client_id, client_secret, base_dir)
+    return Config(
+        token, env.get("DEEPL_API_KEY", "").strip(), client_id, client_secret, base_dir,
+        valheim_server_name=env.get("VALHEIM_SERVER_NAME", "Gangserv3").strip() or "Gangserv3",
+    )

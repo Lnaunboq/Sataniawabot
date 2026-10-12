@@ -25,6 +25,7 @@ Les variables sont lues au lancement ; aucun fichier `.env` n’est chargé auto
 | `DEEPL_API_KEY` | Facultative : traduction japonais/coréen ; endpoint Free pour les clés finissant par `:fx`, Pro sinon |
 | `SPOTIFY_CLIENT_ID` | Facultative : à fournir avec le secret Spotify |
 | `SPOTIFY_CLIENT_SECRET` | Facultative : à fournir avec l’identifiant Spotify |
+| `VALHEIM_SERVER_NAME` | Nom exact passé à `-name` dans le lancement SteamCMD ; `Gangserv3` par défaut |
 
 Une paire Spotify incomplète produit une erreur de configuration au démarrage.
 Sans clés API, le bot fonctionne et explique que le service demandé n’est pas
@@ -61,6 +62,14 @@ les réponses HTTP complètes ou les identifiants API.
 | `>music [playlist]` | Titre aléatoire parmi tous les titres exploitables de la playlist ; `default` par défaut |
 | `>music list` | Liste des playlists : default, weeb, sussy, rock |
 | `>anime` | Répond actuellement « anime » ; fonctionnalité à développer |
+| `>valheim` ou `>valheim status` | Indique si le processus du serveur Gangserv3 est lancé |
+
+La vérification Valheim lit les processus locaux dans `/proc` sous Linux et fonctionne
+avec un lancement dans `screen`. Le bot doit tourner sur la même machine et pouvoir
+lire les processus Valheim. Le nom doit correspondre à l’argument `-name` du serveur,
+pas au nom de la session screen ni au nom du monde. Un processus lancé est affiché
+« allumé », même pendant le chargement du monde. Une erreur de lecture donne un
+état indéterminé plutôt qu’un faux « éteint ».
 
 L’aide utilise les docstrings des commandes. Les erreurs d’arguments et de
 services sont transformées en messages Discord par `bot.py`. Les mentions sont
