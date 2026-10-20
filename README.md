@@ -117,7 +117,7 @@ les réponses HTTP complètes ou les identifiants API.
 | `>help [commande]` | Liste des commandes ou aide détaillée |
 | `>jp <texte>` | Traduction en japonais avec DeepL |
 | `>ko <texte>` | Traduction en coréen avec DeepL |
-| `>sushi` | Recherche une image de sushi sur Wikimedia Commons et l’affiche dans le message |
+| `>sushi` | Recherche une image de sushi sur TheMealDB et l’affiche dans le message |
 | `>music [playlist]` | Titre aléatoire parmi tous les titres exploitables de la playlist ; `default` par défaut |
 | `>music list` | Liste des playlists : default, weeb, sussy, rock |
 | `>valheim` ou `>valheim status` | Indique si le processus du serveur Gangserv3 est lancé |
@@ -156,8 +156,15 @@ vérifient les erreurs, les playlists paginées, l’aide et les chemins indépe
 du répertoire de lancement. Un essai sur Discord reste nécessaire pour vérifier
 les permissions et les identifiants réels.
 
-`>sushi` interroge Internet à chaque appel, sans clé API ni image stockée sur le
-serveur ou dans le dépôt. Discord affiche l’image via son URL dans un embed ;
-le bot doit avoir la permission **Intégrer des liens**. La source, l’auteur et la
-licence sont accessibles via le lien Wikimedia Commons. Une indisponibilité
-réseau produit un message d’erreur ; aucun fichier local ne sert de secours.
+`>sushi` interroge [TheMealDB](https://www.themealdb.com/api.php) à chaque appel,
+sans compte ni clé personnelle, avec la clé publique de test `1` autorisée pour
+le développement et l’usage éducatif. Aucune image n’est stockée sur le serveur
+ou dans le dépôt. Le service ne propose actuellement qu’une recette de sushi :
+la même image peut donc revenir. Une publication sur un appstore nécessite un
+abonnement selon la documentation TheMealDB.
+
+Discord affiche l’image via son URL dans un embed avec un lien vers la recette ;
+le bot doit avoir la permission **Intégrer des liens**. Une panne, un délai dépassé
+ou une réponse invalide produit un message explicite. Aucun fichier local ne
+sert de secours. `WIKIMEDIA_CONTACT` n’est plus nécessaire ; si cette ancienne
+option est encore dans `clé.txt`, elle est ignorée. Redémarrer le bot après la mise à jour.

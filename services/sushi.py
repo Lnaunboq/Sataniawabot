@@ -1,11 +1,15 @@
-"""Recherche d’images de sushi sur Wikimedia Commons, sans stockage local."""
+"""Images de sushi via TheMealDB, sans stockage local ni identifiants personnels."""
 import asyncio
+import logging
 import random
 from dataclasses import dataclass
+from urllib.parse import urlsplit
 
 import aiohttp
 
 from .errors import ServiceError
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -21,36 +25,44 @@ class SushiService:
     async def random_image(self):
         try:
             async with self.session.get(
-                "https://commons.wikimedia.org/w/api.php",
-                params={
-                    "action": "query", "format": "json", "formatversion": "2",
-                    "generator": "search", "gsrsearch": "sushi filetype:bitmap",
-                    "gsrnamespace": "6", "gsrlimit": "30",
-                    "prop": "imageinfo", "iiprop": "url|mime",
-                },
-                headers={"User-Agent": "SataniawaBot/1.0 (Discord sushi command)"},
+                "https://www.themealdb.com/api/json/v1/1/search.php",
+                params={"s": "sushi"},
+                headers={"User-Agent": "SataniawaBot/1.0"},
                 timeout=aiohttp.ClientTimeout(total=10),
             ) as response:
                 if response.status != 200:
-                    raise ServiceError("La recherche d’images de sushi est indisponible. Réessaie plus tard.")
+                    logger.warning("Recherche sushi : TheMealDB HTTP %s", response.status)
+                    if response.status == 429:
+                        raise ServiceError("TheMealDB limite les requêtes (HTTP 429). Réessaie plus tard.")
+                    raise ServiceError(f"TheMealDB est indisponible (HTTP {response.status}). Réessaie plus tard.")
                 result = await response.json()
-            if "error" in result:
-                raise ServiceError("La recherche d’images de sushi est indisponible. Réessaie plus tard.")
+            meals = result["meals"]
+            if meals is None:
+                meals = []
+            if not isinstance(meals, list):
+                raise ValueError("Liste de recettes invalide")
             images = []
-            for page in result.get("query", {}).get("pages", []):
-                for info in page.get("imageinfo", []):
-                    url = info.get("url", "")
-                    source = info.get("descriptionurl", "")
-                    if (
-                        info.get("mime") in {"image/jpeg", "image/png", "image/webp", "image/gif"}
-                        and isinstance(url, str) and url.startswith("https://upload.wikimedia.org/")
-                        and isinstance(source, str) and source.startswith("https://commons.wikimedia.org/")
-                    ):
-                        images.append(SushiImage(url, source))
+            for meal in meals:
+                if not isinstance(meal, dict):
+                    continue
+                url = meal.get("strMealThumb")
+                meal_id = meal.get("idMeal")
+                name = meal.get("strMeal")
+                if not isinstance(url, str):
+                    continue
+                parsed = urlsplit(url)
+                if (
+                    parsed.scheme == "https"
+                    and parsed.netloc in {"www.themealdb.com", "themealdb.com"}
+                    and parsed.path.startswith("/images/media/meals/")
+                    and isinstance(meal_id, str) and meal_id.isascii() and meal_id.isdigit()
+                    and isinstance(name, str) and "sushi" in name.casefold()
+                ):
+                    images.append(SushiImage(url, f"https://www.themealdb.com/meal/{meal_id}"))
             if not images:
-                raise ServiceError("Aucune image de sushi trouvée. Réessaie plus tard.")
+                raise ServiceError("Aucune image de sushi trouvée sur TheMealDB. Réessaie plus tard.")
             return random.choice(images)
         except (aiohttp.ClientError, asyncio.TimeoutError):
-            raise ServiceError("La recherche d’images de sushi est indisponible ou trop lente. Réessaie plus tard.") from None
+            raise ServiceError("TheMealDB est indisponible ou trop lent. Réessaie plus tard.") from None
         except (KeyError, TypeError, ValueError, AttributeError):
-            raise ServiceError("La recherche d’images de sushi a renvoyé une réponse invalide.") from None
+            raise ServiceError("TheMealDB a renvoyé une réponse invalide.") from None

@@ -40,12 +40,13 @@ class ConfigTests(unittest.TestCase):
             base = Path(folder)
             (base / "clés.txt").write_text("DEEPL_API_KEY='old'\n", encoding="utf-8")
             (base / "clé.txt").write_text(
-                "# API\nDEEPL_API_KEY='file-key:fx'\n"
+                "WIKIMEDIA_CONTACT='https://example.org/bot'\n# API\nDEEPL_API_KEY='file-key:fx'\n"
                 'SPOTIFY_CLIENT_ID="client-id" # commentaire\n'
                 "SPOTIFY_CLIENT_SECRET='client-secret'\n", encoding="utf-8",
             )
             config = load_config({"DISCORD_TOKEN": "test"}, folder)
             self.assertEqual(config.deepl_api_key, "file-key:fx")
+            self.assertFalse(hasattr(config, "wikimedia_contact"))
             self.assertEqual(config.spotify_client_id, "client-id")
             self.assertEqual(config.spotify_client_secret, "client-secret")
             config = load_config({"DISCORD_TOKEN": "test", "DEEPL_API_KEY": "override"}, folder)
@@ -243,13 +244,13 @@ class CommandTests(unittest.IsolatedAsyncioTestCase):
     async def test_sushi_online_embed_and_failure(self):
         from sataniawabot.services.sushi import SushiImage
         service = SimpleNamespace(random_image=AsyncMock(return_value=SushiImage(
-            "https://upload.wikimedia.org/sushi.jpg", "https://commons.wikimedia.org/wiki/File:Sushi.jpg",
+            "https://www.themealdb.com/images/media/meals/sushi.jpg", "https://www.themealdb.com/meal/53065",
         )))
         cog = FunCog(service)
         await cog.sushi.callback(cog, self.ctx)
         embed = self.ctx.send.call_args.kwargs["embed"]
-        self.assertEqual(embed.image.url, "https://upload.wikimedia.org/sushi.jpg")
-        self.assertIn("commons.wikimedia.org", embed.description)
+        self.assertEqual(embed.image.url, "https://www.themealdb.com/images/media/meals/sushi.jpg")
+        self.assertIn("themealdb.com", embed.description)
         service.random_image.side_effect = ServiceError("Recherche indisponible")
         with self.assertRaises(ServiceError):
             await cog.sushi.callback(cog, self.ctx)

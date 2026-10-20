@@ -10,12 +10,12 @@ class FunCog(commands.Cog):
     async def sushi(self, ctx):
         """Recherche une image de sushi sur Internet et l’affiche sans l’enregistrer.
         Utilisation : >sushi
-        Source : Wikimedia Commons ; aucune clé API nécessaire.
+        Source : TheMealDB ; aucun compte ni clé personnelle nécessaire.
         """
         image = await self.service.random_image()
         embed = discord.Embed(
             title="🍣 Sushi", url=image.source,
-            description=f"[Source, auteur et licence sur Wikimedia Commons]({image.source})",
+            description=f"[Source : TheMealDB]({image.source})",
         )
         embed.set_image(url=image.url)
         await ctx.send(embed=embed)

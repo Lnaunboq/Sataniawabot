@@ -28,7 +28,7 @@ class Config:
 
 def _load_api_keys(base_dir):
     keys = {}
-    allowed = {"DEEPL_API_KEY", "SPOTIFY_CLIENT_ID", "SPOTIFY_CLIENT_SECRET"}
+    allowed = {"DEEPL_API_KEY", "SPOTIFY_CLIENT_ID", "SPOTIFY_CLIENT_SECRET", "WIKIMEDIA_CONTACT"}
     for filename in ("clés.txt", "clé.txt"):
         path = base_dir / filename
         try:
@@ -41,14 +41,15 @@ def _load_api_keys(base_dir):
                 continue
             name, separator, value = line.partition("=")
             if not separator or name.strip() not in allowed:
-                raise RuntimeError(f"Configuration invalide dans {filename}, ligne {number} : utiliser NOM='valeur' pour les clés API.")
+                raise RuntimeError(f"Configuration invalide dans {filename}, ligne {number} : utiliser NOM='valeur' pour la configuration.")
             try:
                 parts = shlex.split(value, comments=True)
                 if len(parts) > 1:
                     raise ValueError()
             except ValueError:
                 raise RuntimeError(f"Configuration invalide dans {filename}, ligne {number} : vérifier les guillemets.") from None
-            keys[name.strip()] = parts[0] if parts else ""
+            if name.strip() != "WIKIMEDIA_CONTACT":  # Ancienne option acceptée mais ignorée.
+                keys[name.strip()] = parts[0] if parts else ""
     return keys
 
 

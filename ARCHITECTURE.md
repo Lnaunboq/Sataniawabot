@@ -16,7 +16,7 @@ sataniawabot/
 │   ├── valheim.py         # Groupe valheim et état du serveur local
 │   └── fun.py             # Commande sushi
 ├── services/
-│   ├── sushi.py           # Recherche Wikimedia Commons, sans stockage d’images
+│   ├── sushi.py           # Recherche TheMealDB, sans stockage d’images
 │   ├── deepl.py           # Traduction et gestion des erreurs DeepL
 │   ├── valheim.py         # Processus SteamCMD et compteur de joueurs via la console screen
 │   └── spotify.py         # Récupération des titres et choix aléatoire
