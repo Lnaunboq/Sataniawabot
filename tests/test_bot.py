@@ -35,6 +35,27 @@ class ConfigTests(unittest.TestCase):
             with self.assertRaises(RuntimeError):
                 load_config({"DISCORD_TOKEN": "token", "SPOTIFY_CLIENT_ID": "id"}, folder)
 
+    def test_api_key_files_and_environment_priority(self):
+        with tempfile.TemporaryDirectory() as folder:
+            base = Path(folder)
+            (base / "clés.txt").write_text("DEEPL_API_KEY='old'\n", encoding="utf-8")
+            (base / "clé.txt").write_text(
+                "# API\nDEEPL_API_KEY='file-key:fx'\n"
+                'SPOTIFY_CLIENT_ID="client-id" # commentaire\n'
+                "SPOTIFY_CLIENT_SECRET='client-secret'\n", encoding="utf-8",
+            )
+            config = load_config({"DISCORD_TOKEN": "test"}, folder)
+            self.assertEqual(config.deepl_api_key, "file-key:fx")
+            self.assertEqual(config.spotify_client_id, "client-id")
+            self.assertEqual(config.spotify_client_secret, "client-secret")
+            config = load_config({"DISCORD_TOKEN": "test", "DEEPL_API_KEY": "override"}, folder)
+            self.assertEqual(config.deepl_api_key, "override")
+            self.assertNotIn("client-secret", repr(config))
+            (base / "clé.txt").write_text("DEEPL_API_KEY='secret-unclosed\n", encoding="utf-8")
+            with self.assertRaises(RuntimeError) as error:
+                load_config({"DISCORD_TOKEN": "test"}, folder)
+            self.assertNotIn("secret-unclosed", str(error.exception))
+
     def test_import_from_other_directory_without_token_or_connection(self):
         script = """
 import runpy

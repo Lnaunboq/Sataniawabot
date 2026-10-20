@@ -17,7 +17,10 @@ Activer **Message Content Intent** dans le portail développeur Discord pour le 
 
 ## Configuration
 
-Les variables sont lues au lancement ; aucun fichier `.env` n’est chargé automatiquement.
+Les clés API sont lues au lancement dans `clés.txt` ou `clé.txt`, à côté de
+`sataniawabot.py`. Si les deux existent, `clé.txt` est prioritaire. Les variables
+d’environnement sont prioritaires sur ces fichiers, même lorsqu’elles sont vides.
+Aucun fichier `.env` n’est chargé automatiquement.
 
 | Variable | Usage |
 | --- | --- |
@@ -35,35 +38,26 @@ Ne pas versionner les tokens et secrets.
 
 ## Rebrancher DeepL et Spotify
 
-Depuis le dossier `sataniawabot`, préparer un fichier local de configuration :
+Créer ou remplir `clé.txt` (ou `clés.txt`) à côté de `sataniawabot.py` :
 
 ```sh
-cp .env.example .env
-chmod 600 .env
+DEEPL_API_KEY='ta-cle-deepl'
+SPOTIFY_CLIENT_ID='ton-client-id'
+SPOTIFY_CLIENT_SECRET='ton-client-secret'
 ```
 
-Remplir `.env` avec un éditeur local. Ce fichier est ignoré par Git. Le fichier
-`clés.txt` n’est pas utilisé. Ne pas envoyer les secrets sur Discord ou dans le chat.
-Le token Discord peut rester dans le fichier `token.txt` existant.
+Ces deux noms de fichier sont ignorés par Git. Les guillemets sont retirés à la
+lecture ; aucune commande shell n’est exécutée. Les lignes vides et les commentaires
+`#` sont acceptés. Le token Discord peut rester dans `token.txt`.
 
-Charger les variables dans le terminal qui lancera le bot :
-
-```sh
-set -a
-. ./.env
-set +a
-python3 sataniawabot.py
-```
-
-Utiliser le Python du venv si les dépendances y sont installées. Répéter le
-chargement après chaque modification des clés, puis redémarrer le bot. Si le bot
-est lancé par un service ou dans `screen`, les variables doivent être chargées
-dans cet environnement de lancement ; un export dans un autre terminal ne suffit pas.
+Redémarrer le bot après toute modification : les fichiers sont lus automatiquement,
+sans `source` ni export, quel que soit le répertoire de lancement. Un simple
+`python3 sataniawabot.py` depuis le dossier du bot suffit (ou le Python du venv).
 
 ### DeepL
 
 Récupérer une clé dans [le compte DeepL, rubrique clés API](https://www.deepl.com/your-account/keys)
-et la placer dans `DEEPL_API_KEY`. Il faut un abonnement **DeepL API** ; un abonnement
+et la placer dans `DEEPL_API_KEY` dans ton fichier de clés. Il faut un abonnement **DeepL API** ; un abonnement
 au traducteur seul ne fournit pas forcément de clé.
 Voir [l’aide officielle sur les clés](https://support.deepl.com/hc/en-us/articles/360020695820-API-key-for-DeepL-API).
 Le code sélectionne déjà le serveur Free ou Pro selon la clé.
