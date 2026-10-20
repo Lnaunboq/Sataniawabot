@@ -16,10 +16,10 @@ sataniawabot/
 │   ├── valheim.py         # Groupe valheim et état du serveur local
 │   └── fun.py             # Commande sushi
 ├── services/
+│   ├── sushi.py           # Recherche Wikimedia Commons, sans stockage d’images
 │   ├── deepl.py           # Traduction et gestion des erreurs DeepL
 │   ├── valheim.py         # Processus SteamCMD et compteur de joueurs via la console screen
 │   └── spotify.py         # Récupération des titres et choix aléatoire
-├── images/sushis/
 ├── requirements.txt
 └── README.md              # Installation, configuration et lancement
 ```
@@ -63,7 +63,7 @@ Les noms de commandes et le préfixe `>` sont conservés.
 
 Les tests vérifient les cas utiles de cette migration : clés absentes, argument de
 traduction manquant, playlist inconnue ou vide, titre Spotify absent, dossier
-d’images vide et lancement depuis un autre répertoire. Les tests des services
+recherche d’images indisponible et lancement depuis un autre répertoire. Les tests des services
 peuvent simuler les API sans connexion Discord ni clés réelles.
 
 Les vérifications automatisées se trouvent dans tests/.

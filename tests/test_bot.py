@@ -63,8 +63,7 @@ from unittest.mock import patch
 with patch('pathlib.Path.read_text', side_effect=AssertionError('secret read')), patch('discord.ext.commands.Bot.run', side_effect=AssertionError('connection')):
     runpy.run_path(SCRIPT, run_name='import_check')
 from config import Config, BASE_DIR
-assert Config('test').sushi_dir == BASE_DIR / 'images' / 'sushis'
-assert list(Config('test').sushi_dir.glob('*.webp'))
+assert Config('test').base_dir == BASE_DIR
 """.replace("SCRIPT", repr(str(BASE_DIR / "sataniawabot.py")))
         env = dict(os.environ, PYTHONPATH=str(BASE_DIR), PYTHONDONTWRITEBYTECODE="1")
         with tempfile.TemporaryDirectory() as folder:
@@ -241,15 +240,16 @@ class CommandTests(unittest.IsolatedAsyncioTestCase):
         await self.bot.on_command_error(self.ctx, commands.CommandNotFound())
         self.assertIn("Commande inconnue", self.ctx.send.call_args.args[0])
 
-    async def test_sushi_missing_empty_and_valid_folder(self):
-        with tempfile.TemporaryDirectory() as folder:
-            cog = FunCog(Path(folder) / "absent")
+    async def test_sushi_online_embed_and_failure(self):
+        from sataniawabot.services.sushi import SushiImage
+        service = SimpleNamespace(random_image=AsyncMock(return_value=SushiImage(
+            "https://upload.wikimedia.org/sushi.jpg", "https://commons.wikimedia.org/wiki/File:Sushi.jpg",
+        )))
+        cog = FunCog(service)
+        await cog.sushi.callback(cog, self.ctx)
+        embed = self.ctx.send.call_args.kwargs["embed"]
+        self.assertEqual(embed.image.url, "https://upload.wikimedia.org/sushi.jpg")
+        self.assertIn("commons.wikimedia.org", embed.description)
+        service.random_image.side_effect = ServiceError("Recherche indisponible")
+        with self.assertRaises(ServiceError):
             await cog.sushi.callback(cog, self.ctx)
-            self.assertIn("Aucun sushi", self.ctx.send.call_args.args[0])
-            cog.sushi_dir = Path(folder)
-            (Path(folder) / "notes.txt").write_text("pas une image")
-            await cog.sushi.callback(cog, self.ctx)
-            self.assertIn("Aucun sushi", self.ctx.send.call_args.args[0])
-            (Path(folder) / "image.png").write_bytes(b"fake image")
-            await cog.sushi.callback(cog, self.ctx)
-            self.assertEqual(self.ctx.send.call_args.kwargs["file"].filename, "image.png")

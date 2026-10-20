@@ -25,11 +25,6 @@ class Config:
     valheim_server_name: str = "Serveur Gangserv3"
     valheim_screen_name: str = "Gangserv3"
 
-    @property
-    def sushi_dir(self):
-        return self.base_dir / "images" / "sushis"
-
-
 
 def _load_api_keys(base_dir):
     keys = {}

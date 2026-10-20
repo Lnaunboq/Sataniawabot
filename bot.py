@@ -12,6 +12,7 @@ if __package__:
     from .cogs.valheim import ValheimCog
     from .services.deepl import DeepLService
     from .services.errors import ServiceError
+    from .services.sushi import SushiService
     from .services.spotify import SpotifyService
     from .services.valheim import ValheimService
 else:
@@ -22,6 +23,7 @@ else:
     from cogs.valheim import ValheimCog
     from services.deepl import DeepLService
     from services.errors import ServiceError
+    from services.sushi import SushiService
     from services.spotify import SpotifyService
     from services.valheim import ValheimService
 
@@ -48,7 +50,7 @@ class SataniawaBot(commands.Bot):
         await self.add_cog(MusicCog(
             SpotifyService.from_config(self.config), self.config.playlists,
         ))
-        await self.add_cog(FunCog(self.config.sushi_dir))
+        await self.add_cog(FunCog(SushiService(self.api_session)))
         await self.add_cog(ValheimCog(ValheimService(
             self.config.valheim_server_name, screen_name=self.config.valheim_screen_name,
         )))

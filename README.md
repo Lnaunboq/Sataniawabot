@@ -101,8 +101,7 @@ venv/bin/python sataniawabot.py
 ```
 
 Depuis un autre dossier, utiliser les chemins absolus vers le Python du venv et
-le script. Les images, données et `token.txt` sont résolus depuis le dossier du
-bot. Depuis la racine du dépôt, le lancement en module fonctionne aussi :
+le script. Les fichiers de configuration sont résolus depuis le dossier du bot. Depuis la racine du dépôt, le lancement en module fonctionne aussi :
 
 ```sh
 sataniawabot/venv/bin/python -m sataniawabot.sataniawabot
@@ -118,7 +117,7 @@ les réponses HTTP complètes ou les identifiants API.
 | `>help [commande]` | Liste des commandes ou aide détaillée |
 | `>jp <texte>` | Traduction en japonais avec DeepL |
 | `>ko <texte>` | Traduction en coréen avec DeepL |
-| `>sushi` | Image aléatoire de `images/sushis/` |
+| `>sushi` | Recherche une image de sushi sur Wikimedia Commons et l’affiche dans le message |
 | `>music [playlist]` | Titre aléatoire parmi tous les titres exploitables de la playlist ; `default` par défaut |
 | `>music list` | Liste des playlists : default, weeb, sussy, rock |
 | `>valheim` ou `>valheim status` | Indique si le processus du serveur Gangserv3 est lancé |
@@ -156,3 +155,9 @@ Ces tests n’utilisent ni clés réelles ni connexion Discord. Ils simulent les
 vérifient les erreurs, les playlists paginées, l’aide et les chemins indépendants
 du répertoire de lancement. Un essai sur Discord reste nécessaire pour vérifier
 les permissions et les identifiants réels.
+
+`>sushi` interroge Internet à chaque appel, sans clé API ni image stockée sur le
+serveur ou dans le dépôt. Discord affiche l’image via son URL dans un embed ;
+le bot doit avoir la permission **Intégrer des liens**. La source, l’auteur et la
+licence sont accessibles via le lien Wikimedia Commons. Une indisponibilité
+réseau produit un message d’erreur ; aucun fichier local ne sert de secours.
