@@ -142,9 +142,9 @@ class CommandTests(unittest.IsolatedAsyncioTestCase):
         return await command.callback(command.cog, self.ctx, *args, **kwargs)
 
     async def test_commands_and_help(self):
-        self.assertEqual({c.name for c in self.bot.commands}, {"help", "jp", "ko", "sushi", "music", "anime", "valheim"})
+        self.assertEqual({c.name for c in self.bot.commands}, {"help", "jp", "ko", "sushi", "music", "valheim"})
         await self.invoke("help")
-        self.assertEqual(len(self.ctx.send.call_args.kwargs["embed"].fields), 7)
+        self.assertEqual(len(self.ctx.send.call_args.kwargs["embed"].fields), 6)
         for command in self.bot.commands:
             self.assertTrue(command.help)
             await self.invoke("help", command.name)

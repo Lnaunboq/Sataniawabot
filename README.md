@@ -33,6 +33,71 @@ Sans clés API, le bot fonctionne et explique que le service demandé n’est pa
 configuré. `>music list` reste disponible. Les playlists sont définies dans `config.py`.
 Ne pas versionner les tokens et secrets.
 
+## Rebrancher DeepL et Spotify
+
+Depuis le dossier `sataniawabot`, préparer un fichier local de configuration :
+
+```sh
+cp .env.example .env
+chmod 600 .env
+```
+
+Remplir `.env` avec un éditeur local. Ce fichier est ignoré par Git. Le fichier
+`clés.txt` n’est pas utilisé. Ne pas envoyer les secrets sur Discord ou dans le chat.
+Le token Discord peut rester dans le fichier `token.txt` existant.
+
+Charger les variables dans le terminal qui lancera le bot :
+
+```sh
+set -a
+. ./.env
+set +a
+python3 sataniawabot.py
+```
+
+Utiliser le Python du venv si les dépendances y sont installées. Répéter le
+chargement après chaque modification des clés, puis redémarrer le bot. Si le bot
+est lancé par un service ou dans `screen`, les variables doivent être chargées
+dans cet environnement de lancement ; un export dans un autre terminal ne suffit pas.
+
+### DeepL
+
+Récupérer une clé dans [le compte DeepL, rubrique clés API](https://www.deepl.com/your-account/keys)
+et la placer dans `DEEPL_API_KEY`. Il faut un abonnement **DeepL API** ; un abonnement
+au traducteur seul ne fournit pas forcément de clé.
+Voir [l’aide officielle sur les clés](https://support.deepl.com/hc/en-us/articles/360020695820-API-key-for-DeepL-API).
+Le code sélectionne déjà le serveur Free ou Pro selon la clé.
+Après redémarrage, essayer `>jp Bonjour` puis `>ko Bonjour`.
+Une réponse HTTP 403 indique un refus d’authentification ou d’accès ; 456 indique
+un quota dépassé, à vérifier dans le compte DeepL.
+
+### Spotify
+
+Retrouver l’application dans [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
+et renseigner ensemble `SPOTIFY_CLIENT_ID` et `SPOTIFY_CLIENT_SECRET`.
+**Cela ne garantit pas le fonctionnement de `>music` avec une application en mode
+Development.** Le code actuel utilise Client Credentials, sans connexion utilisateur.
+
+D’après le [guide officiel de migration 2026](https://developer.spotify.com/documentation/web-api/tutorials/february-2026-migration-guide),
+le mode Development impose désormais Premium au propriétaire de l’application,
+le nouvel endpoint `/playlists/{id}/items` et un accès limité au contenu des
+playlists appartenant à l’utilisateur connecté ou dont il est collaborateur.
+La playlist `default` actuelle appartient à Spotify : elle devra être remplacée
+par une playlist accessible de ton compte dans `config.py`.
+
+Pour ce mode, il reste donc une migration du code à faire : connexion utilisateur
+OAuth Authorization Code avec URI de retour enregistrée dans le Dashboard,
+conservation et renouvellement du jeton, permissions `playlist-read-private` et
+`playlist-read-collaborative` selon les playlists, puis adaptation de l’endpoint
+et du champ de réponse `track` devenu `item`. Les secrets seuls ne remplacent pas
+cette autorisation. Voir [Authorization Code](https://developer.spotify.com/documentation/web-api/tutorials/code-flow).
+Les applications en Extended Quota sont exemptées des changements décrits dans
+ce guide ; leur intégration actuelle peut être essayée avec les deux identifiants.
+
+`>music list` permet de vérifier la liste locale sans API. `>music rock` vérifie
+ensuite l’accès réel, mais le message d’erreur actuel regroupe les refus d’accès
+et les indisponibilités : il ne prouve pas à lui seul qu’une clé est incorrecte.
+
 ## Lancement
 
 Depuis le dossier `sataniawabot`, après avoir défini les variables souhaitées :
@@ -62,7 +127,6 @@ les réponses HTTP complètes ou les identifiants API.
 | `>sushi` | Image aléatoire de `images/sushis/` |
 | `>music [playlist]` | Titre aléatoire parmi tous les titres exploitables de la playlist ; `default` par défaut |
 | `>music list` | Liste des playlists : default, weeb, sussy, rock |
-| `>anime` | Répond actuellement « anime » ; fonctionnalité à développer |
 | `>valheim` ou `>valheim status` | Indique si le processus du serveur Gangserv3 est lancé |
 | `>valheim player` ou `>valheim players` | Dernier compteur de joueurs, heure de mesure et noms lorsqu’ils sont disponibles |
 

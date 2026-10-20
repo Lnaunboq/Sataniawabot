@@ -1,6 +1,6 @@
 # Architecture de SataniawaBot
 
-Le bot compte sept commandes principales actives. Les Cogs
+Le bot compte six commandes principales actives. Les Cogs
 regroupent les commandes Discord par fonctionnalité, les services gèrent les API,
 et la configuration est chargée explicitement au démarrage.
 
@@ -14,14 +14,11 @@ sataniawabot/
 │   ├── translation.py     # Commandes jp et ko
 │   ├── music.py           # Commande music et liste des playlists
 │   ├── valheim.py         # Groupe valheim et état du serveur local
-│   └── fun.py             # Commandes sushi et anime ; avis lorsqu’elle sera activée
+│   └── fun.py             # Commande sushi
 ├── services/
 │   ├── deepl.py           # Traduction et gestion des erreurs DeepL
 │   ├── valheim.py         # Processus SteamCMD et compteur de joueurs via la console screen
 │   └── spotify.py         # Récupération des titres et choix aléatoire
-├── data/
-│   ├── animes.json
-│   └── avis.json
 ├── images/sushis/
 ├── requirements.txt
 └── README.md              # Installation, configuration et lancement
@@ -55,8 +52,7 @@ sataniawabot/
    locaux ou sans nom, artiste ou lien exploitable. Son cache de token reste en mémoire.
 4. Les journaux utilisent `logging`, sans réponses HTTP complètes ni texte traduit.
    La configuration DeepL est vérifiée avant tout appel réseau.
-5. Les anciennes ébauches de commandes sont suivies dans `BACKLOG.md`.
-6. `requirements.txt` déclare toutes les dépendances utilisées ; `README.md`
+5. `requirements.txt` déclare toutes les dépendances utilisées ; `README.md`
    documente les clés facultatives et le lancement réel de `sataniawabot.py`.
 
 ## Ordre de migration appliqué
@@ -70,5 +66,4 @@ traduction manquant, playlist inconnue ou vide, titre Spotify absent, dossier
 d’images vide et lancement depuis un autre répertoire. Les tests des services
 peuvent simuler les API sans connexion Discord ni clés réelles.
 
-Cette structure est implémentée. Les fonctionnalités non actives sont suivies
-dans BACKLOG.md. Les vérifications automatisées se trouvent dans tests/.
+Les vérifications automatisées se trouvent dans tests/.

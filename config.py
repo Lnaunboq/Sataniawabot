@@ -28,10 +28,6 @@ class Config:
     def sushi_dir(self):
         return self.base_dir / "images" / "sushis"
 
-    @property
-    def data_dir(self):
-        return self.base_dir / "data"
-
 
 def load_config(environ=None, base_dir=BASE_DIR):
     env = os.environ if environ is None else environ

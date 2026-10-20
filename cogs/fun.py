@@ -28,10 +28,3 @@ class FunCog(commands.Cog):
             await ctx.send(file=image)
         finally:
             image.close()
-
-    @commands.command()
-    async def anime(self, ctx):
-        """Commande en cours de développement : répond actuellement « anime ».
-        Utilisation : >anime
-        """
-        await ctx.send("anime")
