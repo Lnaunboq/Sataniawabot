@@ -13,9 +13,9 @@ class ValheimCog(commands.Cog):
 
     @commands.group(invoke_without_command=True)
     async def valheim(self, ctx):
-        """Affiche si le processus du serveur Valheim local est lancé.
+        """Indique si le serveur Valheim est allumé ou éteint.
         Utilisation : >valheim, >valheim status ou >valheim player
-        Le statut indique le processus lancé, pas la disponibilité du monde en jeu.
+        Le serveur peut encore être en cours de démarrage lorsqu’il est indiqué allumé.
         """
         if ctx.subcommand_passed is not None:
             await ctx.send("❌ Sous-commande inconnue. Utilise `>valheim status` ou `>valheim player`.")
@@ -26,7 +26,7 @@ class ValheimCog(commands.Cog):
     async def player(self, ctx):
         """Affiche la dernière mesure des joueurs connectés et les noms disponibles.
         Utilisation : >valheim player (ou >valheim players)
-        La console publie le compteur environ toutes les dix minutes.
+        Les informations sont actualisées environ toutes les dix minutes.
         L’heure affichée est celle du serveur ; les noms peuvent être indisponibles.
         """
         snapshot = await self.service.players()
@@ -34,13 +34,13 @@ class ValheimCog(commands.Cog):
         if snapshot.names:
             message += "\n" + "\n".join(f"• {escape_markdown(name)[:100]}" for name in snapshot.names[:20])
         elif snapshot.count:
-            message += "\nLes noms ne sont pas disponibles dans le journal."
+            message += "\nLes noms des joueurs ne sont pas disponibles."
         message += f"\nDernière mesure : {snapshot.reported_at} (heure du serveur, actualisation ≈ 10 min)."
         await ctx.send(message)
 
     @valheim.command()
     async def status(self, ctx):
-        """Affiche si le processus du serveur Valheim local est lancé.
+        """Indique si le serveur Valheim est allumé ou éteint.
         Utilisation : >valheim status
         """
         await self.send_status(ctx)

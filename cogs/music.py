@@ -8,12 +8,11 @@ class MusicCog(commands.Cog):
 
     @commands.command()
     async def music(self, ctx, playlist: str = "default"):
-        """Partage un titre choisi au hasard dans toute une playlist Spotify.
+        """Partage un titre choisi au hasard dans une playlist.
         Utilisation : >music [playlist]
         Playlists : default (par défaut), weeb, sussy, rock.
         >music list affiche les playlists disponibles.
         Exemple : >music rock
-        Nécessite Spotify configuré pour choisir un titre.
         """
         playlist = playlist.lower()
         if playlist == "list":

@@ -21,7 +21,8 @@ sataniawabot/
 │   ├── valheim.py         # Processus SteamCMD et compteur de joueurs via la console screen
 │   └── spotify.py         # Récupération des titres et choix aléatoire
 ├── requirements.txt
-└── README.md              # Installation, configuration et lancement
+├── ADMINISTRATION.md      # Installation, configuration et lancement
+└── README.md              # Guide d’utilisation des commandes
 ```
 
 ## Responsabilités
@@ -52,7 +53,7 @@ sataniawabot/
    locaux ou sans nom, artiste ou lien exploitable. Son cache de token reste en mémoire.
 4. Les journaux utilisent `logging`, sans réponses HTTP complètes ni texte traduit.
    La configuration DeepL est vérifiée avant tout appel réseau.
-5. `requirements.txt` déclare toutes les dépendances utilisées ; `README.md`
+5. `requirements.txt` déclare toutes les dépendances utilisées ; `ADMINISTRATION.md`
    documente les clés facultatives et le lancement réel de `sataniawabot.py`.
 
 ## Ordre de migration appliqué

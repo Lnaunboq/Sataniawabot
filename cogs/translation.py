@@ -16,18 +16,16 @@ class TranslationCog(commands.Cog):
 
     @commands.command()
     async def jp(self, ctx, *, message: str):
-        """Traduit le texte en japonais avec DeepL et affiche le nom de son auteur.
+        """Traduit le texte en japonais et affiche le nom de son auteur.
         Utilisation : >jp <texte>
         Exemple : >jp Bonjour tout le monde !
-        Nécessite une clé API DeepL configurée.
         """
         await self._translate(ctx, message, "JA")
 
     @commands.command()
     async def ko(self, ctx, *, message: str):
-        """Traduit le texte en coréen avec DeepL et affiche le nom de son auteur.
+        """Traduit le texte en coréen et affiche le nom de son auteur.
         Utilisation : >ko <texte>
         Exemple : >ko Bonjour tout le monde !
-        Nécessite une clé API DeepL configurée.
         """
         await self._translate(ctx, message, "KO")

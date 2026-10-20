@@ -7,10 +7,10 @@ class HelpCog(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    async def help(self, ctx, command_name=None):
+    async def help(self, ctx, *, command_name=None):
         """Affiche les commandes disponibles ou l’aide détaillée d’une commande.
         Utilisation : >help [commande]
-        Exemple : >help music
+        Exemples : >help music, >help valheim player
         """
         embed = discord.Embed(title="Aide des commandes")
         if command_name is None:

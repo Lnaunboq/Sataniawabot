@@ -168,11 +168,13 @@ class CommandTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(self.ctx.send.call_args.kwargs["embed"].fields), 6)
         for command in self.bot.commands:
             self.assertTrue(command.help)
-            await self.invoke("help", command.name)
+            await self.invoke("help", command_name=command.name)
             field = self.ctx.send.call_args.kwargs["embed"].fields[0]
             self.assertTrue(field.value)
             self.assertLessEqual(len(field.value), 1024)
-        await self.invoke("help", "inconnue")
+        await self.invoke("help", command_name="valheim player")
+        self.assertIn(">valheim player", self.ctx.send.call_args.kwargs["embed"].fields[0].value)
+        await self.invoke("help", command_name="inconnue")
         self.assertEqual(self.ctx.send.call_args.kwargs["embed"].fields[0].name, "Commande inconnue")
 
     async def test_music_list_unknown_and_unconfigured(self):

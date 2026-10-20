@@ -1,1 +1,13 @@
-Voir README.md pour l’installation, la configuration et le lancement de SataniawaBot.
+>help : afficher les commandes disponibles.
+>help <commande> : consulter l’utilisation d’une commande.
+>jp <texte> : traduire en japonais.
+>ko <texte> : traduire en coréen.
+>sushi : afficher une image de sushi.
+>music [playlist] : partager un titre au hasard (playlist default si omise).
+>music list : afficher les playlists disponibles.
+>valheim ou >valheim status : consulter l’état du serveur Valheim.
+>valheim player ou >valheim players : consulter les dernières informations sur les joueurs.
+
+Exemples : >jp Bonjour ! | >music rock | >help valheim player
+Les arguments entre <…> sont obligatoires ; ceux entre […] sont facultatifs.
+Ne pas saisir les chevrons ni les crochets.
